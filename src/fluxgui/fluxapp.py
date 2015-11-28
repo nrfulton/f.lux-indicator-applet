@@ -14,6 +14,7 @@ class FluxGUI(object):
     FluxGUI initializes/destroys the app
     """
     def __init__(self):
+        self.initialized = False
         self.pidfile = os.path.expanduser("~/.fluxgui.pid")
         self.check_pid()
         try:
@@ -29,6 +30,8 @@ class FluxGUI(object):
             print "Critical error. Exiting."
             self.exit(1)
 
+        self.initialized = True
+
     def __del__(self):
         self.exit()
 
@@ -41,13 +44,14 @@ class FluxGUI(object):
         self.exit()
 
     def exit(self, code=0):
-        try:
-            self.xflux_controller.stop()
-        except MethodUnavailableError:
-            pass
-        os.unlink(self.pidfile)
-        gtk.main_quit()
-        sys.exit(code)
+        if self.initialized:
+            try:
+                self.xflux_controller.stop()
+            except MethodUnavailableError:
+                pass
+            os.unlink(self.pidfile)
+            gtk.main_quit()
+            sys.exit(code)
 
     def run(self):
         gtk.main()
