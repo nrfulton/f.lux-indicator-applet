@@ -15,7 +15,7 @@ class FluxGUI(object):
     """
     def __init__(self):
         self.initialized = False
-        self.pidfile = os.path.expanduser("~/.fluxgui.pid")
+        self.pidfile = os.path.abspath("/var/lock/fluxgui.pid") 
         self.check_pid()
         try:
             self.settings = settings.Settings()
